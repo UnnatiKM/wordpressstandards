@@ -1,0 +1,77 @@
+
+**We have to follow below standards for developing New Website.**
+
+- First of all we have to make new theme from “https://underscores.me/” with proper name and comments.
+
+- After download the theme, we have to change below options in style.css
+
+1. Theme Name: <SITENAME>
+2. Theme URI: <SITEURL>
+3. Author: <SITENAME>
+4. Author URI: <SITEURL>
+5. Description: <Theme Description>
+6. Version: <Theme Version>
+7. Text Domain: <SITE SLUG>
+ 
+
+- Change wordpress database prefix suitable to theme name at the time of installation.
+
+- First integrate static html to wordpress then start to make it dynamically.
+- After integration of static html ,First set header,footer dynamically.
+- Always include all JS and Css from Function.php.and put css and js in proper directory. Only style.css is put on theme root directory. And never use Inline CSS in any file/template. Also never use fixed path of CSS, JS and images always use “get_template_directory_uri()” to get theme path.
+- For include css - wp_enqueue_style('bootstrap-css', get_template_directory_uri() . '/css/bootstrap.min.css',array(),’1.2’);
+- For Include JS - wp_enqueue_script( bootstrap-min', get_template_directory_uri() . '/js/bootstrap.min.js', array(), ‘1.2.3’, true );
+ 
+** Note: **
+- Most of people not doing proper code in js
+ 
+- If you want to use any JS variable then you have to localize that variables using “wp_localize_script” function. For ex - use Ajax url and theme URL in particular JS.
+  wp_localize_script( ‘custom', 'theme_name_admin_URL_Name', theme_name_admin_URL());
+      function nfi_admin_URL() {
+	$MyTemplatepath = get_template_directory_uri();
+	$MyHomepath = esc_url( home_url( '/' ) );
+	$admin_URL = admin_url( 'admin-ajax.php' ); // Your File Path
+	 return array(
+        'admin_URL' =>  $admin_URL,
+        'MyTemplatepath' =>  $MyTemplatepath,
+        'MyHomepath' =>  $MyHomepath,
+      );
+}
+ 
+ 
+- When you complete integration of header and footer dynamic portion then start work on home page development.
+- When you create template , then use “tp-”as prefix. For ex. If you want to create template for Home page then use “tp-home.php”name as template file name.and also give proper template name.
+- When you create Custom post type, then use another separate file don’t add code in function file. And use “type-” as prefix for CPT file. For ex - if you want to create CPT for “Events” then use “type-events” as file name. And put all functions related to this post type in this file.and also include this file into Function file.
+Note:
+Add this file in “inc” directory
+ 
+- Before start developing,Disallow file editor from admin side and revision in wordpress Appearance. Put this code in wp-config.php after “define('WP_DEBUG', false);”.
+define( 'DISALLOW_FILE_EDIT', true );
+define( 'WP_POST_REVISIONS', false);
+ 
+- Always use proper naming for variable declaration.
+- Always use proper naming for all types of declaration.(variable,functions,classes etc)
+- Always Use php comments (// or /* --- */) don’t use HTML comments in all files.
+- Always put a comments for function description before you create new function. So anyone can know the purpose of that function declaration.
+- remove all commented/extra codes from all files.
+- Make Indent your code so if there is any mistake in design or other then you can easily find.
+- Use images with proper dimension. Don’t use full size images to everywhere. When you want to show thumbnail than you have to use “thumb image” code.and before start developing the page, you have all images dimensions used in that page. And create new image size using “add_image_size()”function in function file if required.
+-  Use Conditional tag as per PHP standards or wordpress standard. And use same conditional tag style for whole project.
+- never do changes in wordpress core files.
+-  Always keep all themes and plugins upto date.
+-  If one functionality is used for more than one pages, then make function for that and then use it.
+-  Always use wordpress functions with “get_”prefix. Never use “the_title()” or “the_content” directly in any file.for ex - get_the_title().
+- Always use “apply_filters(‘the_content’,$content)” before print content.
+- Always use empty conditions before print any variable or foreach statement.
+- Add below filters in function file.
+remove_action('wp_head', 'wlwmanifest_link');
+remove_action('wp_head', 'feed_links_extra', 3);
+remove_action('wp_head', 'adjacent_posts_rel_link', 10, 0);
+remove_action('wp_head', 'wp_shortlink_wp_head', 10, 0 );
+remove_action('wp_head', 'adjacent_posts_rel_link_wp_head', 10, 0 );
+remove_action('wp_head', 'wp_generator');
+ 
+function wpt_remove_version() {  
+return '';  
+}  
+add_filter('the_generator', 'wpt_remove_version');
